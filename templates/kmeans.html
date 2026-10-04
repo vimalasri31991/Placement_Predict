@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}K-Means Clustering | Placement Prediction{% endblock %}
+
+{% block content %}
+
+{% if mode == "manual" %}
+<div class="page-header">
+    <h2 class="page-title">K-Means Clustering: Manual K Selection</h2>
+    <p class="page-subtitle">Enter the number of clusters manually to group students into distinct academic and skill profiles.</p>
+</div>
+{% elif mode == "elbow" %}
+<div class="page-header">
+    <h2 class="page-title">K-Means: Elbow Method (Inertia / WCSS)</h2>
+    <p class="page-subtitle">Find the optimal K by identifying where the rate of WCSS decrease sharply levels off.</p>
+</div>
+{% elif mode == "silhouette" %}
+<div class="page-header">
+    <h2 class="page-title">K-Means: Silhouette Score Analysis</h2>
+    <p class="page-subtitle">Evaluate cluster cohesion and separation across varying values of K.</p>
+</div>
+{% endif %}
+
+{% if error %}
+<div class="alert-error"><strong>Error:</strong> {{ error }}</div>
+{% endif %}
+
+{% if results %}
+
+<!-- =========================================================
+     MANUAL K SELECTION
+     ========================================================= -->
+{% if mode == "manual" %}
+
+<section class="dashboard-card">
+    <h3>Select Number of Clusters (K)</h3>
+    <form method="get" action="{{ url_for('kmeans_manual') }}" class="k-input-form">
+        <label for="k-input" class="k-input-label">Enter K (2 – 10):</label>
+        <input type="number" id="k-input" name="k"
+               min="2" max="10"
+               value="{{ results.clusters }}"
+               class="k-number-input">
+        <button type="submit" class="k-submit-btn">Apply</button>
+    </form>
+
+    <div class="info-grid" style="margin-top:20px;">
+        <div class="info-box">
+            <h4>Active Clusters (K)</h4>
+            <p style="font-size:26px;font-weight:700;color:#1f3a5f;">{{ results.clusters }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Inertia (WCSS)</h4>
+            <p style="font-size:26px;font-weight:700;color:#1f3a5f;">{{ "{:,.1f}".format(results.inertia) }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Silhouette Score</h4>
+            <p style="font-size:26px;font-weight:700;color:#2a9d8f;">{{ "%.4f"|format(results.silhouette) }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-card">
+    <h3>Cluster Distribution &amp; Student Breakdown</h3>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Cluster Index</th>
+                    <th>Student Count</th>
+                    <th>Proportion of Sample</th>
+                    <th>Placement Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in results.cluster_profiles %}
+                <tr>
+                    <td>
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:{{ p.color }};margin-right:8px;vertical-align:middle;"></span>
+                        <strong>Cluster {{ p.cluster }}</strong>
+                    </td>
+                    <td>{{ "{:,}".format(p.count) }}</td>
+                    <td>{{ p.percent }}%</td>
+                    <td><strong>{{ p.placement_rate }}%</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container" style="margin-top:20px;">
+        <img src="{{ url_for('static', filename='charts/' + results.chart) }}" alt="K-Means Cluster 2D PCA">
+        <p class="eda-chart-caption">2D PCA projection of student feature space grouped into {{ results.clusters }} clusters with marked centroids.</p>
+    </div>
+</section>
+
+{% endif %}
+
+
+<!-- =========================================================
+     ELBOW METHOD
+     ========================================================= -->
+{% if mode == "elbow" %}
+
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">Optimal K Determination (Elbow Method)</h3>
+        <span class="badge badge-uni">Optimal: K = {{ results.optimal_k_elbow }}</span>
+    </div>
+    <p class="card-intro">
+        The Elbow curve plots Within-Cluster Sum of Squares (Inertia) against K values.
+        The optimal K is where adding more clusters yields diminishing returns.
+    </p>
+
+    <!-- K number input -->
+    <form method="get" action="{{ url_for('kmeans_elbow') }}" class="k-input-form" style="margin-bottom:20px;">
+        <label for="k-input-elbow" class="k-input-label">Select K to highlight (2 – 10):</label>
+        <input type="number" id="k-input-elbow" name="k"
+               min="2" max="10"
+               value="{{ selected_k if selected_k else results.optimal_k_elbow }}"
+               class="k-number-input">
+        <button type="submit" class="k-submit-btn">Highlight</button>
+    </form>
+
+    <div class="info-grid" style="margin-bottom:20px;">
+        <div class="info-box">
+            <h4>Identified Elbow Point</h4>
+            <p style="font-size:26px;font-weight:700;color:#e05638;">K = {{ results.optimal_k_elbow }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Evaluation Range</h4>
+            <p style="font-size:22px;font-weight:700;color:#1f3a5f;">K = 2 to K = 10</p>
+        </div>
+        <div class="info-box">
+            <h4>Recommended Next Step</h4>
+            <p style="font-size:15px;font-weight:600;">
+                <a href="{{ url_for('kmeans_manual') }}?k={{ results.optimal_k_elbow }}"
+                   style="color:#2563eb;text-decoration:underline;">
+                    Explore K = {{ results.optimal_k_elbow }}
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="table-wrapper" style="margin-bottom:20px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Number of Clusters (K)</th>
+                    <th>Inertia (WCSS)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results.rows %}
+                <tr {% if row.k == results.optimal_k_elbow %}style="background:#fef2f2;font-weight:bold;"
+                    {% elif selected_k and row.k == selected_k %}style="background:#eff6ff;font-weight:bold;"{% endif %}>
+                    <td>K = {{ row.k }}</td>
+                    <td>{{ "{:,.2f}".format(row.inertia) }}</td>
+                    <td>
+                        {% if row.k == results.optimal_k_elbow %}
+                        <span style="color:#e05638;">★ Recommended Elbow</span>
+                        {% elif selected_k and row.k == selected_k %}
+                        <span style="color:#2563eb;">◆ Selected</span>
+                        {% else %}
+                        Candidate
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + results.elbow_chart) }}" alt="K-Means Elbow Curve">
+        <p class="eda-chart-caption">WCSS / Inertia progression across K=2 through K=10 with marked elbow inflection point.</p>
+    </div>
+</section>
+
+{% endif %}
+
+
+<!-- =========================================================
+     SILHOUETTE METHOD
+     ========================================================= -->
+{% if mode == "silhouette" %}
+
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">Silhouette Analysis across Cluster Sizes</h3>
+        <span class="badge badge-uni">Max Silhouette: K = {{ results.optimal_k_silhouette }}</span>
+    </div>
+    <p class="card-intro">
+        Silhouette Coefficient measures how similar each student is to their own cluster vs. others.
+        Higher values indicate well-separated, cohesive clusters.
+    </p>
+
+    <!-- K number input -->
+    <form method="get" action="{{ url_for('kmeans_silhouette') }}" class="k-input-form" style="margin-bottom:20px;">
+        <label for="k-input-sil" class="k-input-label">Select K to highlight (2 – 10):</label>
+        <input type="number" id="k-input-sil" name="k"
+               min="2" max="10"
+               value="{{ selected_k if selected_k else results.optimal_k_silhouette }}"
+               class="k-number-input">
+        <button type="submit" class="k-submit-btn">Highlight</button>
+    </form>
+
+    <div class="info-grid" style="margin-bottom:20px;">
+        <div class="info-box">
+            <h4>Maximum Silhouette K</h4>
+            <p style="font-size:26px;font-weight:700;color:#2a9d8f;">K = {{ results.optimal_k_silhouette }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Metric Range</h4>
+            <p style="font-size:22px;font-weight:700;color:#1f3a5f;">-1.00 to +1.00</p>
+        </div>
+        <div class="info-box">
+            <h4>Recommended Action</h4>
+            <p style="font-size:15px;font-weight:600;">
+                <a href="{{ url_for('kmeans_manual') }}?k={{ results.optimal_k_silhouette }}"
+                   style="color:#2563eb;text-decoration:underline;">
+                    Test K = {{ results.optimal_k_silhouette }} Clusters
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="table-wrapper" style="margin-bottom:20px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Number of Clusters (K)</th>
+                    <th>Silhouette Coefficient</th>
+                    <th>Cluster Quality</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results.rows %}
+                <tr {% if row.k == results.optimal_k_silhouette %}style="background:#f0fdf4;font-weight:bold;"
+                    {% elif selected_k and row.k == selected_k %}style="background:#eff6ff;font-weight:bold;"{% endif %}>
+                    <td>K = {{ row.k }}</td>
+                    <td>{{ "%.4f"|format(row.silhouette) }}</td>
+                    <td>
+                        {% if row.k == results.optimal_k_silhouette %}
+                        <span style="color:#16a34a;">★ Highest Cohesion (Optimal)</span>
+                        {% elif selected_k and row.k == selected_k %}
+                        <span style="color:#2563eb;">◆ Selected</span>
+                        {% elif row.silhouette > 0.15 %}
+                        <span style="color:#0369a1;">Good Separation</span>
+                        {% else %}
+                        Moderate Overlap
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + results.silhouette_chart) }}" alt="K-Means Silhouette Curve">
+        <p class="eda-chart-caption">Average silhouette coefficient across K=2 through K=10 with optimal peak marked.</p>
+    </div>
+</section>
+
+{% endif %}
+
+{% endif %}
+
+{% endblock %}
