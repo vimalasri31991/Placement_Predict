@@ -1,87 +1,397 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Placement Prediction Project</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-<header class="topbar">
-    <h1>Placement Prediction Project</h1>
-</header>
+{% block title %}
+Placement Prediction Dashboard
+{% endblock %}
 
-<div class="layout">
-    <!-- Left panel -->
-    <nav class="sidebar">
-        <ul>
-            <li>
-                <a href="{{ url_for('data_loading') }}"
-                   class="menu-item {% if active == 'data-loading' %}active{% endif %}">
-                    Data Loading
-                </a>
-            </li>
-            <li>
-                <a href="{{ url_for('eda_page') }}"
-                   class="menu-item {% if active == 'eda' %}active{% endif %}">
-                    EDA
-                </a>
-            </li>
-            <li class="menu-item disabled">Preprocessing (coming soon)</li>
-            <li class="menu-item disabled">Model Training (coming soon)</li>
-            <li class="menu-item disabled">Prediction (coming soon)</li>
-        </ul>
-    </nav>
 
-    <!-- Main content -->
-    <main class="content">
-        <h2>Exploratory Data Analysis</h2>
+{% block content %}
 
-        {% if error %}
-            <div class="error">{{ error }}</div>
-        {% endif %}
+<h2>
+    Placement Prediction Dashboard
+</h2>
 
-        {% if results %}
-            <table class="summary-table">
-                <tr><td>Rows</td><td>{{ results.n_rows }}</td></tr>
-                <tr><td>Columns</td><td>{{ results.n_cols }}</td></tr>
-                <tr><td>Duplicate rows</td><td>{{ results.duplicate_count }}</td></tr>
-            </table>
+<p class="intro">
 
-            {% if results.missing %}
-                <h3>Missing Values</h3>
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>Column</th><th>Missing Count</th></tr>
-                        </thead>
-                        <tbody>
-                        {% for col, count in results.missing.items() %}
-                            <tr><td>{{ col }}</td><td>{{ count }}</td></tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
+    Machine Learning based Student Placement Prediction System
 
-            <h3>Placement Status Counts</h3>
-            <table class="summary-table">
-                {% for status, count in results.target_counts.items() %}
-                <tr><td>{{ status }}</td><td>{{ count }}</td></tr>
-                {% endfor %}
-            </table>
+</p>
 
-            <h3>Charts</h3>
-            <div class="chart-grid">
-                {% for fname in results.charts %}
-                <div class="chart-card">
-                    <img src="{{ url_for('static', filename='charts/' + fname) }}" alt="{{ fname }}">
-                </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </main>
-</div>
 
-</body>
-</html>
+<section class="dashboard-card">
+
+    <h3>
+        Project Overview
+    </h3>
+
+    <p>
+
+        This project uses Machine Learning algorithms to predict
+        whether a student is likely to get placed based on
+        academic performance, attendance, aptitude, coding skills,
+        internships, projects, workshops, soft skills and
+        mock interview performance.
+
+    </p>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Dataset Information
+    </h3>
+
+
+    <div class="info-grid">
+
+        <div class="info-box">
+
+            <h4>
+                Dataset
+            </h4>
+
+            <p>
+                Placement Prediction Dataset
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                Records
+            </h4>
+
+            <p>
+                50,000 students
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                Target
+            </h4>
+
+            <p>
+                PlacementStatus
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                Problem Type
+            </h4>
+
+            <p>
+                Binary Classification
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Machine Learning Workflow
+    </h3>
+
+
+    <div class="workflow">
+
+        <div class="workflow-step">
+
+            <span>1</span>
+
+            <h4>
+                Data Loading
+            </h4>
+
+            <p>
+                Load the placement dataset and inspect
+                its structure.
+            </p>
+
+        </div>
+
+
+        <div class="workflow-step">
+
+            <span>2</span>
+
+            <h4>
+                EDA
+            </h4>
+
+            <p>
+                Analyze distributions, correlations,
+                missing values and placement status.
+            </p>
+
+        </div>
+
+
+        <div class="workflow-step">
+
+            <span>3</span>
+
+            <h4>
+                Preprocessing
+            </h4>
+
+            <p>
+                Encode categorical features, scale
+                numerical features and handle outliers.
+            </p>
+
+        </div>
+
+
+        <div class="workflow-step">
+
+            <span>4</span>
+
+            <h4>
+                ML Models
+            </h4>
+
+            <p>
+                Train and evaluate multiple Machine
+                Learning algorithms.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Machine Learning Algorithms
+    </h3>
+
+
+    <div class="algorithm-grid">
+
+        <a href="{{ url_for('linear_regression') }}"
+           class="algorithm-card">
+
+            <h4>
+                Linear Regression
+            </h4>
+
+            <p>
+                Regression-based baseline for placement
+                outcome prediction.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('logistic_regression') }}"
+           class="algorithm-card">
+
+            <h4>
+                Logistic Regression
+            </h4>
+
+            <p>
+                Binary classification model for
+                placement prediction.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('regularisation') }}"
+           class="algorithm-card">
+
+            <h4>
+                Regularisation
+            </h4>
+
+            <p>
+                L1, L2 and Elastic Net regularisation
+                techniques.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('decision_tree') }}"
+           class="algorithm-card">
+
+            <h4>
+                Decision Tree
+            </h4>
+
+            <p>
+                Tree-based model for student placement
+                classification.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('cost_complexity') }}"
+           class="algorithm-card">
+
+            <h4>
+                Cost-Complexity Pruning
+            </h4>
+
+            <p>
+                Decision Tree pruning using cost-complexity
+                analysis.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('random_forest') }}"
+           class="algorithm-card">
+
+            <h4>
+                Random Forest
+            </h4>
+
+            <p>
+                Ensemble of Decision Trees for
+                classification.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('ada_boost') }}"
+           class="algorithm-card">
+
+            <h4>
+                AdaBoost
+            </h4>
+
+            <p>
+                Boosting algorithm combining weak
+                learners.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('gradient_boost') }}"
+           class="algorithm-card">
+
+            <h4>
+                Gradient Boosting
+            </h4>
+
+            <p>
+                Sequential boosting algorithm for
+                placement prediction.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('k_calculation') }}"
+           class="algorithm-card">
+
+            <h4>
+                K Calculation
+            </h4>
+
+            <p>
+                Analyze suitable K values using
+                inertia and silhouette score.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('kmeans') }}"
+           class="algorithm-card">
+
+            <h4>
+                K-Means
+            </h4>
+
+            <p>
+                Cluster students using K-Means clustering.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('kmeans_performance') }}"
+           class="algorithm-card">
+
+            <h4>
+                K-Means Performance
+            </h4>
+
+            <p>
+                Evaluate clustering performance using
+                silhouette and ARI.
+            </p>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Placement Target
+    </h3>
+
+
+    <div class="target-grid">
+
+        <div class="target-box">
+
+            <h4>
+                0
+            </h4>
+
+            <p>
+                Not Placed
+            </p>
+
+        </div>
+
+
+        <div class="target-box">
+
+            <h4>
+                1
+            </h4>
+
+            <p>
+                Placed
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

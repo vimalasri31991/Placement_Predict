@@ -1,630 +1,637 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-
-    <meta charset="UTF-8">
-
-    <title>Placement Prediction Project</title>
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
-
-</head>
-
-<body>
-
-<header class="topbar">
-
-    <h1>Placement Prediction Project</h1>
-
-</header>
+{% block title %}
+Preprocessing | Placement Prediction
+{% endblock %}
 
 
-<div class="layout">
+{% block content %}
+
+<h2>
+    Data Preprocessing
+</h2>
+
+<p class="intro">
+
+    Preparing the Placement Prediction dataset
+    for Machine Learning.
+
+</p>
 
 
-    <!-- SIDEBAR -->
+{% if error %}
 
-    <nav class="sidebar">
+<div class="error">
 
-        <ul>
+    <strong>
+        Error:
+    </strong>
 
-            <li>
+    {{ error }}
 
-                <a
-                    href="{{ url_for('data_loading') }}"
-                    class="menu-item
-                    {% if active == 'data-loading' %}active{% endif %}"
-                >
-                    Data Loading
-                </a>
+</div>
 
-            </li>
+{% endif %}
 
 
-            <li>
+{% if results %}
 
-                <a
-                    href="{{ url_for('eda_page') }}"
-                    class="menu-item
-                    {% if active == 'eda' %}active{% endif %}"
-                >
-                    EDA
-                </a>
+<section class="dashboard-card">
 
-            </li>
+    <h3>
+        Train-Test Split
+    </h3>
 
 
-            <li>
+    <div class="info-grid">
 
-                <a
-                    href="{{ url_for('preprocessing_page') }}"
-                    class="menu-item
-                    {% if active == 'preprocessing' %}active{% endif %}"
-                >
-                    Preprocessing
-                </a>
+        <div class="info-box">
 
-            </li>
+            <h4>
+                Original Rows
+            </h4>
 
+            <p>
+                {{ results.rows_before }}
+            </p>
 
-            <li class="menu-item disabled">
-
-                Model Training (coming soon)
-
-            </li>
+        </div>
 
 
-            <li class="menu-item disabled">
+        <div class="info-box">
 
-                Prediction (coming soon)
+            <h4>
+                Training Rows
+            </h4>
 
-            </li>
+            <p>
+                {{ results.train_rows }}
+            </p>
 
-        </ul>
-
-    </nav>
-
-
-    <!-- MAIN CONTENT -->
-
-    <main class="content">
+        </div>
 
 
-        <h2>Data Preprocessing</h2>
+        <div class="info-box">
+
+            <h4>
+                Testing Rows
+            </h4>
+
+            <p>
+                {{ results.test_rows }}
+            </p>
+
+        </div>
 
 
-        {% if error %}
+        <div class="info-box">
 
-            <div class="error">
+            <h4>
+                Training %
+            </h4>
 
-                {{ error }}
+            <p>
+                {{ results.train_percentage }}%
+            </p>
 
-            </div>
-
-        {% endif %}
-
-
-        {% if results %}
+        </div>
 
 
-        <!-- DATASET SUMMARY -->
+        <div class="info-box">
 
-        <h3>Dataset Summary</h3>
+            <h4>
+                Testing %
+            </h4>
 
-        <table class="summary-table">
+            <p>
+                {{ results.test_percentage }}%
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                Duplicate Rows Removed
+            </h4>
+
+            <p>
+                {{ results.duplicate_count }}
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Feature Types
+    </h3>
+
+
+    <h4>
+        Numerical Columns
+    </h4>
+
+    <div class="table-wrapper">
+
+        <table class="data-table">
 
             <tr>
 
-                <td>Original Rows</td>
-
-                <td>{{ results.original_rows }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Original Columns</td>
-
-                <td>{{ results.original_columns }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Duplicate Rows Removed</td>
-
-                <td>{{ results.duplicate_count }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Rows After Duplicate Removal</td>
-
-                <td>{{ results.rows_after_duplicates }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Training Rows</td>
-
-                <td>{{ results.train_rows }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Testing Rows</td>
-
-                <td>{{ results.test_rows }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Train/Test Split</td>
+                {% for column in results.numeric_columns %}
 
                 <td>
-                    {{ results.train_percentage }}% /
-                    {{ results.test_percentage }}%
+                    {{ column }}
                 </td>
+
+                {% endfor %}
 
             </tr>
 
         </table>
 
+    </div>
 
-        <!-- NUMERICAL FEATURES -->
 
-        <h3>Numerical Features</h3>
+    <h4>
+        Nominal / Categorical Columns
+    </h4>
 
-        <div class="table-wrapper">
+    <div class="table-wrapper">
 
-            <table class="data-table">
+        <table class="data-table">
 
-                <thead>
+            <tr>
 
-                    <tr>
+                {% for column in results.nominal_columns %}
 
-                        <th>Feature</th>
+                <td>
+                    {{ column }}
+                </td>
 
-                    </tr>
+                {% endfor %}
 
-                </thead>
+            </tr>
 
-                <tbody>
+        </table>
 
-                    {% for col in results.numeric_columns %}
+    </div>
 
-                    <tr>
 
-                        <td>{{ col }}</td>
+    <h4>
+        Ordinal Columns
+    </h4>
 
-                    </tr>
+    <div class="table-wrapper">
 
-                    {% endfor %}
+        <table class="data-table">
 
-                </tbody>
+            <tr>
 
-            </table>
+                {% for column in results.ordinal_columns %}
 
-        </div>
+                <td>
+                    {{ column }}
+                </td>
 
+                {% endfor %}
 
-        <!-- STANDARD SCALING -->
+            </tr>
 
-        <h3>Standard Scaling</h3>
+        </table>
 
-        <p>
-            StandardScaler transforms numerical features so that
-            they are centered around mean 0 with standard deviation 1.
-        </p>
+    </div>
 
-        <div class="table-wrapper">
+</section>
 
-            <table class="data-table">
 
-                <thead>
+<section class="dashboard-card">
 
-                    <tr>
+    <h3>
+        Standard Scaling
+    </h3>
 
-                        {% for col in results.numeric_columns %}
 
-                        <th>{{ col }}</th>
+    <p>
+        Standard Scaling transforms numerical features
+        using mean and standard deviation.
+    </p>
 
-                        {% endfor %}
 
-                    </tr>
+    <div class="table-wrapper">
 
-                </thead>
+        <table class="data-table">
 
-                <tbody>
+            {% if results.standard_preview %}
 
-                    {% for row in results.standard_preview %}
+            <thead>
 
-                    <tr>
+            <tr>
 
-                        {% for col in results.numeric_columns %}
+                {% for key in results.standard_preview[0].keys() %}
 
-                        <td>{{ row[col] }}</td>
+                <th>
+                    {{ key }}
+                </th>
 
-                        {% endfor %}
+                {% endfor %}
 
-                    </tr>
+            </tr>
 
-                    {% endfor %}
+            </thead>
 
-                </tbody>
 
-            </table>
+            <tbody>
 
-        </div>
+            {% for row in results.standard_preview %}
 
+            <tr>
 
-        <!-- MIN MAX SCALING -->
+                {% for value in row.values() %}
 
-        <h3>Min-Max Scaling</h3>
+                <td>
+                    {{ value }}
+                </td>
 
-        <p>
-            Min-Max Scaling converts numerical values into the
-            range 0 to 1.
-        </p>
+                {% endfor %}
 
-        <div class="table-wrapper">
+            </tr>
 
-            <table class="data-table">
+            {% endfor %}
 
-                <thead>
+            </tbody>
 
-                    <tr>
+            {% endif %}
 
-                        {% for col in results.numeric_columns %}
+        </table>
 
-                        <th>{{ col }}</th>
+    </div>
 
-                        {% endfor %}
+</section>
 
-                    </tr>
 
-                </thead>
+<section class="dashboard-card">
 
-                <tbody>
+    <h3>
+        Min-Max Scaling
+    </h3>
 
-                    {% for row in results.minmax_preview %}
 
-                    <tr>
+    <p>
+        Min-Max Scaling converts numerical values
+        into a common range.
+    </p>
 
-                        {% for col in results.numeric_columns %}
 
-                        <td>{{ row[col] }}</td>
+    <div class="table-wrapper">
 
-                        {% endfor %}
+        <table class="data-table">
 
-                    </tr>
+            {% if results.minmax_preview %}
 
-                    {% endfor %}
+            <thead>
 
-                </tbody>
+            <tr>
 
-            </table>
+                {% for key in results.minmax_preview[0].keys() %}
 
-        </div>
+                <th>
+                    {{ key }}
+                </th>
 
+                {% endfor %}
 
-        <!-- NOMINAL ENCODING -->
+            </tr>
 
-        <h3>One-Hot Encoding</h3>
+            </thead>
 
-        <p>
-            Nominal categorical features are converted into
-            separate binary columns using One-Hot Encoding.
-        </p>
 
+            <tbody>
 
-        <h4>Original Categorical Columns</h4>
+            {% for row in results.minmax_preview %}
 
-        <div class="table-wrapper">
+            <tr>
 
-            <table class="data-table">
+                {% for value in row.values() %}
 
-                <thead>
+                <td>
+                    {{ value }}
+                </td>
 
-                    <tr>
+                {% endfor %}
 
-                        <th>Column</th>
+            </tr>
 
-                    </tr>
+            {% endfor %}
 
-                </thead>
+            </tbody>
 
-                <tbody>
+            {% endif %}
 
-                    {% for col in results.nominal_columns %}
+        </table>
 
-                    <tr>
+    </div>
 
-                        <td>{{ col }}</td>
+</section>
 
-                    </tr>
 
-                    {% endfor %}
+<section class="dashboard-card">
 
-                </tbody>
+    <h3>
+        One-Hot Encoding
+    </h3>
 
-            </table>
 
-        </div>
+    <p>
+        Categorical variables are converted into
+        binary indicator columns.
+    </p>
 
 
-        <h4>
-            Generated Encoded Columns
-            ({{ results.encoded_column_count }})
-        </h4>
+    <p>
 
-        <div class="table-wrapper">
+        Encoded columns generated:
+        <strong>
+            {{ results.encoded_column_count }}
+        </strong>
 
-            <table class="data-table">
+    </p>
 
-                <thead>
 
-                    <tr>
+    <div class="table-wrapper">
 
-                        <th>Encoded Column</th>
+        <table class="data-table">
 
-                    </tr>
+            {% if results.ohe_preview %}
 
-                </thead>
+            <thead>
 
-                <tbody>
+            <tr>
 
-                    {% for col in results.encoded_columns %}
+                {% for key in results.ohe_preview[0].keys() %}
 
-                    <tr>
+                <th>
+                    {{ key }}
+                </th>
 
-                        <td>{{ col }}</td>
+                {% endfor %}
 
-                    </tr>
+            </tr>
 
-                    {% endfor %}
+            </thead>
 
-                </tbody>
 
-            </table>
+            <tbody>
 
-        </div>
+            {% for row in results.ohe_preview %}
 
+            <tr>
 
-        <h4>Encoded Training Data - First 5 Rows</h4>
+                {% for value in row.values() %}
 
-        {% if results.ohe_preview %}
+                <td>
+                    {{ value }}
+                </td>
 
-        <div class="table-wrapper">
+                {% endfor %}
 
-            <table class="data-table">
+            </tr>
 
-                <thead>
+            {% endfor %}
 
-                    <tr>
+            </tbody>
 
-                        {% for col in results.encoded_columns %}
+            {% endif %}
 
-                        <th>{{ col }}</th>
+        </table>
 
-                        {% endfor %}
+    </div>
 
-                    </tr>
+</section>
 
-                </thead>
 
-                <tbody>
+<section class="dashboard-card">
 
-                    {% for row in results.ohe_preview %}
+    <h3>
+        Ordinal Encoding
+    </h3>
 
-                    <tr>
 
-                        {% for col in results.encoded_columns %}
+    <p>
+        Ordinal categories are converted into
+        numerical levels.
+    </p>
 
-                        <td>{{ row[col] }}</td>
 
-                        {% endfor %}
+    <p>
 
-                    </tr>
+        Columns:
+        <strong>
+            {{ results.ordinal_encoded_columns|join(', ') }}
+        </strong>
 
-                    {% endfor %}
+    </p>
 
-                </tbody>
+</section>
 
-            </table>
 
-        </div>
+<section class="dashboard-card">
 
-        {% endif %}
+    <h3>
+        IQR Outlier Detection
+    </h3>
 
 
-        <!-- ORDINAL ENCODING -->
-
-        <h3>Ordinal Encoding</h3>
-
-        <p>
-            Ordered categorical values are converted into numerical
-            values according to their predefined order.
-        </p>
-
+    <div class="table-wrapper">
 
         <table class="data-table">
 
             <thead>
 
-                <tr>
+            <tr>
 
-                    {% for col in results.ordinal_columns %}
+                <th>
+                    Column
+                </th>
 
-                    <th>{{ col }}</th>
+                <th>
+                    Q1
+                </th>
 
-                    {% endfor %}
+                <th>
+                    Q3
+                </th>
 
-                    {% for col in results.ordinal_encoded_columns %}
+                <th>
+                    Lower Limit
+                </th>
 
-                    <th>{{ col }}</th>
+                <th>
+                    Upper Limit
+                </th>
 
-                    {% endfor %}
+                <th>
+                    Outliers
+                </th>
 
-                </tr>
+            </tr>
 
             </thead>
 
+
             <tbody>
 
-                {% for row in results.ordinal_preview %}
+            {% for row in results.outliers %}
 
-                <tr>
+            <tr>
 
-                    {% for col in results.ordinal_columns %}
+                <td>
+                    {{ row.column }}
+                </td>
 
-                    <td>{{ row[col] if col in row else "-" }}</td>
+                <td>
+                    {{ row.q1 }}
+                </td>
 
-                    {% endfor %}
+                <td>
+                    {{ row.q3 }}
+                </td>
 
-                    {% for col in results.ordinal_encoded_columns %}
+                <td>
+                    {{ row.lower }}
+                </td>
 
-                    <td>{{ row[col] }}</td>
+                <td>
+                    {{ row.upper }}
+                </td>
 
-                    {% endfor %}
+                <td>
+                    {{ row.outliers }}
+                </td>
 
-                </tr>
+            </tr>
 
-                {% endfor %}
+            {% endfor %}
 
             </tbody>
 
         </table>
 
+    </div>
 
-        <!-- OUTLIER DETECTION -->
-
-        <h3>Outlier Detection using IQR</h3>
-
-        <div class="table-wrapper">
-
-            <table class="data-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Feature</th>
-
-                        <th>Q1</th>
-
-                        <th>Q3</th>
-
-                        <th>IQR</th>
-
-                        <th>Lower Fence</th>
-
-                        <th>Upper Fence</th>
-
-                        <th>Outliers</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for col, item in results.outliers.items() %}
-
-                    <tr>
-
-                        <td>{{ col }}</td>
-
-                        <td>{{ item.q1 }}</td>
-
-                        <td>{{ item.q3 }}</td>
-
-                        <td>{{ item.iqr }}</td>
-
-                        <td>{{ item.lower_fence }}</td>
-
-                        <td>{{ item.upper_fence }}</td>
-
-                        <td>{{ item.outlier_count }}</td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
+</section>
 
 
-        <!-- OUTLIER CLIPPING -->
+<section class="dashboard-card">
 
-        <h3>Outlier Clipping</h3>
-
-        <div class="table-wrapper">
-
-            <table class="data-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Feature</th>
-
-                        <th>Minimum Before</th>
-
-                        <th>Minimum After</th>
-
-                        <th>Maximum Before</th>
-
-                        <th>Maximum After</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for col, item in results.clipping.items() %}
-
-                    <tr>
-
-                        <td>{{ col }}</td>
-
-                        <td>{{ item.before_min }}</td>
-
-                        <td>{{ item.after_min }}</td>
-
-                        <td>{{ item.before_max }}</td>
-
-                        <td>{{ item.after_max }}</td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
+    <h3>
+        Outlier Fix
+    </h3>
 
 
-        {% endif %}
+    <p>
+        IQR-based clipping is used to limit extreme
+        numerical values to the calculated lower and
+        upper boundaries.
+    </p>
 
-    </main>
 
-</div>
+    <div class="table-wrapper">
 
-</body>
+        <table class="data-table">
 
-</html>
+            <thead>
+
+            <tr>
+
+                <th>
+                    Column
+                </th>
+
+                <th>
+                    Values Clipped
+                </th>
+
+                <th>
+                    Lower
+                </th>
+
+                <th>
+                    Upper
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for row in results.clipping %}
+
+            <tr>
+
+                <td>
+                    {{ row.column }}
+                </td>
+
+                <td>
+                    {{ row.clipped }}
+                </td>
+
+                <td>
+                    {{ row.lower }}
+                </td>
+
+                <td>
+                    {{ row.upper }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Preprocessed Dataset
+    </h3>
+
+    <p>
+
+        Processed rows:
+        <strong>
+            {{ results.processed_rows }}
+        </strong>
+
+    </p>
+
+    <p>
+
+        Target variable:
+        <strong>
+            {{ results.target }}
+        </strong>
+
+    </p>
+
+</section>
+
+{% endif %}
+
+{% endblock %}
