@@ -1,328 +1,759 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
+{% block title %}
+Placement EDA - 15 Tasks | Placement Prediction
+{% endblock %}
 
-    <title>Placement Prediction Project</title>
+{% block content %}
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
-</head>
+<h2>
+    Exploratory Data Analysis (EDA) — 15 Tasks
+</h2>
 
-<body>
+<p class="intro">
+    Comprehensive exploratory data analysis on the student placement dataset (50,000 records) covering all 15 univariate, bivariate, and multivariate analytical tasks.
+</p>
 
-<!-- =========================================================
-     TOP HEADER
-========================================================= -->
-
-<header class="topbar">
-
-    <h1>Placement Prediction Project</h1>
-
-</header>
-
-
-<!-- =========================================================
-     MAIN LAYOUT
-========================================================= -->
-
-<div class="layout">
-
-
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
-
-    <nav class="sidebar">
-
-        <ul>
-
-            <!-- Data Loading -->
-
-            <li>
-
-                <a
-                    href="{{ url_for('data_loading') }}"
-                    class="menu-item
-                    {% if active == 'data-loading' %}active{% endif %}"
-                >
-                    Data Loading
-                </a>
-
-            </li>
-
-
-            <!-- EDA -->
-
-            <li>
-
-                <a
-                    href="{{ url_for('eda_page') }}"
-                    class="menu-item
-                    {% if active == 'eda' %}active{% endif %}"
-                >
-                    EDA
-                </a>
-
-            </li>
-
-
-            <!-- Preprocessing -->
-
-            <li>
-
-                <a
-                    href="{{ url_for('preprocessing_page') }}"
-                    class="menu-item
-                    {% if active == 'preprocessing' %}active{% endif %}"
-                >
-                    Preprocessing
-                </a>
-
-            </li>
-
-
-            <!-- Future Modules -->
-
-            <li class="menu-item disabled">
-
-                Model Training (coming soon)
-
-            </li>
-
-
-            <li class="menu-item disabled">
-
-                Prediction (coming soon)
-
-            </li>
-
-        </ul>
-
-    </nav>
-
-
-    <!-- =====================================================
-         MAIN CONTENT
-    ====================================================== -->
-
-    <main class="content">
-
-
-        <h2>Exploratory Data Analysis</h2>
-
-
-        <!-- Error Message -->
-
-        {% if error %}
-
-            <div class="error">
-
-                {{ error }}
-
-            </div>
-
-        {% endif %}
-
-
-        {% if results %}
-
-
-        <!-- =================================================
-             DATASET SUMMARY
-        ================================================== -->
-
-        <h3>Dataset Summary</h3>
-
-        <table class="summary-table">
-
-            <tr>
-
-                <td>Number of Rows</td>
-
-                <td>{{ results.rows }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Number of Columns</td>
-
-                <td>{{ results.columns }}</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Duplicate Rows</td>
-
-                <td>{{ results.duplicates }}</td>
-
-            </tr>
-
-        </table>
-
-
-        <!-- =================================================
-             MISSING VALUES
-        ================================================== -->
-
-        <h3>Missing Values</h3>
-
-
-        {% if results.missing %}
-
-            <div class="table-wrapper">
-
-                <table class="data-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Column</th>
-
-                            <th>Missing Count</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for col, count in results.missing.items() %}
-
-                        <tr>
-
-                            <td>{{ col }}</td>
-
-                            <td>{{ count }}</td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        {% else %}
-
-            <p>
-                No missing values were found in the dataset.
-            </p>
-
-        {% endif %}
-
-
-        <!-- =================================================
-             TARGET VARIABLE
-        ================================================== -->
-
-        <h3>Placement Status Distribution</h3>
-
-
-        <table class="summary-table">
-
-            <thead>
-
-                <tr>
-
-                    <th>Placement Status</th>
-
-                    <th>Count</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for status, count in results.target_counts.items() %}
-
-                <tr>
-
-                    <td>
-
-                        {% if status == 1 %}
-
-                            Placed
-
-                        {% elif status == 0 %}
-
-                            Not Placed
-
-                        {% else %}
-
-                            {{ status }}
-
-                        {% endif %}
-
-                    </td>
-
-                    <td>{{ count }}</td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-
-        <!-- =================================================
-             CHARTS
-        ================================================== -->
-
-        <h3>EDA Charts</h3>
-
-
-        {% if results.charts %}
-
-            <div class="chart-grid">
-
-                {% for fname in results.charts %}
-
-                    <div class="chart-card">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='charts/' + fname
-                            ) }}"
-                            alt="{{ fname }}"
-                        >
-
-                    </div>
-
-                {% endfor %}
-
-            </div>
-
-        {% else %}
-
-            <p>
-                No charts were generated.
-            </p>
-
-        {% endif %}
-
-
-        {% endif %}
-
-
-    </main>
-
+{% if error %}
+<div class="error">
+    <strong>Error loading EDA:</strong> {{ error }}
 </div>
+{% endif %}
 
-</body>
+{% if summary %}
 
-</html>
+<!-- =========================================================
+     TASK 1: LOAD DATA
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">1</span>
+            Task 1: Load Data – Shape & Initial Records
+        </h3>
+        <span class="badge badge-uni">Overview & Univariate</span>
+    </div>
+    <p class="card-intro">
+        Successfully loaded the raw student placement dataset from CSV. Total records: <strong>{{ summary.task1.shape.rows }}</strong> rows and <strong>{{ summary.task1.shape.columns }}</strong> features.
+    </p>
+
+    <div class="info-grid" style="margin-bottom: 16px;">
+        <div class="info-box">
+            <h4>Total Records (Rows)</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #1f3a5f;">{{ "{:,}".format(summary.task1.shape.rows) }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Total Features (Columns)</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #1f3a5f;">{{ summary.task1.shape.columns }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Data Status</h4>
+            <p style="font-size: 15px; font-weight: 600; color: #16a34a;">Loaded & Parsed Cleanly</p>
+        </div>
+    </div>
+
+    <h4>First 5 Rows Preview</h4>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    {% for col in summary.task1.columns %}
+                    <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in summary.task1.first_5_rows %}
+                <tr>
+                    {% for col in summary.task1.columns %}
+                    <td>{{ row[col] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 2: BASIC INFO / STRUCTURE
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">2</span>
+            Task 2: Basic Info & Structure (.info(), dtypes, .describe())
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Dataset feature structure containing <strong>{{ summary.task2.num_numeric }}</strong> numeric features and <strong>{{ summary.task2.num_categorical }}</strong> categorical features.
+    </p>
+
+    <h4>Feature Data Types & Completeness (.info())</h4>
+    <div class="table-wrapper" style="max-height: 320px; margin-bottom: 20px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Data Type</th>
+                    <th>Non-Null Count</th>
+                    <th>Missing Count</th>
+                    <th>Unique Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for col in summary.task2.column_info %}
+                <tr>
+                    <td><strong>{{ col.column }}</strong></td>
+                    <td><code>{{ col.dtype }}</code></td>
+                    <td>{{ "{:,}".format(col.non_null_count) }}</td>
+                    <td>
+                        {% if col.null_count > 0 %}
+                        <span style="color: #e05638; font-weight: bold;">{{ "{:,}".format(col.null_count) }}</span>
+                        {% else %}
+                        <span style="color: #16a34a;">0</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ col.unique_count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4>Numeric Features Summary Statistics (.describe())</h4>
+    <div class="table-wrapper" style="max-height: 320px; margin-bottom: 20px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Count</th>
+                    <th>Mean</th>
+                    <th>Std Dev</th>
+                    <th>Min</th>
+                    <th>25%</th>
+                    <th>50% (Median)</th>
+                    <th>75%</th>
+                    <th>Max</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in summary.task2.numeric_describe %}
+                <tr>
+                    <td><strong>{{ row.feature }}</strong></td>
+                    <td>{{ "{:,.0f}".format(row.count) }}</td>
+                    <td>{{ row.mean }}</td>
+                    <td>{{ row.std }}</td>
+                    <td>{{ row.min }}</td>
+                    <td>{{ row["25%"] }}</td>
+                    <td><strong>{{ row["50%"] }}</strong></td>
+                    <td>{{ row["75%"] }}</td>
+                    <td>{{ row.max }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4>Categorical Features Summary Statistics (.describe())</h4>
+    <div class="table-wrapper" style="max-height: 250px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Count</th>
+                    <th>Unique Categories</th>
+                    <th>Most Frequent (Top)</th>
+                    <th>Top Frequency</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in summary.task2.categorical_describe %}
+                <tr>
+                    <td><strong>{{ row.feature }}</strong></td>
+                    <td>{{ "{:,.0f}".format(row.count) }}</td>
+                    <td>{{ row.unique }}</td>
+                    <td><code>{{ row.top }}</code></td>
+                    <td>{{ "{:,}".format(row.freq) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 3: MISSING VALUES
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">3</span>
+            Task 3: Missing Values Analysis & Imputation Strategy
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Analysis of missing values across all columns. Identified columns with nulls and prepared median imputation values for numeric NaNs to maintain distribution stability.
+    </p>
+
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Feature with Missing Values</th>
+                    <th>Missing Count</th>
+                    <th>Missing Percentage</th>
+                    <th>Recommended Median Fill Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in summary.task3.missing_table %}
+                <tr>
+                    <td><strong>{{ item.column }}</strong></td>
+                    <td><span style="color: #e05638; font-weight: bold;">{{ "{:,}".format(item.missing_count) }}</span></td>
+                    <td>{{ item.missing_percent }}%</td>
+                    <td><span style="background: #e0f2fe; padding: 2px 8px; border-radius: 4px; font-weight: 600;">{{ item.median_fill }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task3.chart) }}" alt="Task 3: Missing Values Heatmap">
+        <p class="eda-chart-caption">Figure 3: Missing values heatmap indicating missing pattern across student records.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 4: DUPLICATE ROWS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">4</span>
+            Task 4: Duplicate Records Check
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Checked for duplicate student records across all 32 features to prevent data leakage and bias in downstream model training.
+    </p>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <h4>Duplicate Rows Found</h4>
+            <p style="font-size: 22px; font-weight: bold; color: #16a34a;">{{ summary.task4.duplicate_count }}</p>
+        </div>
+        <div class="info-box">
+            <h4>Duplicate Rate</h4>
+            <p style="font-size: 22px; font-weight: bold; color: #16a34a;">{{ summary.task4.duplicate_percent }}%</p>
+        </div>
+        <div class="info-box">
+            <h4>Data Hygiene Status</h4>
+            <p style="font-size: 15px; font-weight: 600; color: #16a34a;">{{ summary.task4.status }}</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 5: TARGET VARIABLE DISTRIBUTION
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">5</span>
+            Task 5: Target Variable Distribution (PlacementStatus)
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Distribution of binary target variable <code>PlacementStatus</code> (0 = Not Placed, 1 = Placed).
+    </p>
+
+    <div class="info-grid" style="margin-bottom: 15px;">
+        <div class="info-box">
+            <h4>Placed Students (1)</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #2a9d8f;">{{ "{:,}".format(summary.task5.placed_count) }} ({{ summary.task5.placed_percent }}%)</p>
+        </div>
+        <div class="info-box">
+            <h4>Not Placed Students (0)</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #e05638;">{{ "{:,}".format(summary.task5.not_placed_count) }} ({{ summary.task5.not_placed_percent }}%)</p>
+        </div>
+        <div class="info-box">
+            <h4>Class Imbalance Ratio</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #1f3a5f;">~1.9 : 1 (Mild Imbalance)</p>
+        </div>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task5.chart) }}" alt="Task 5: Placement Status Distribution">
+        <p class="eda-chart-caption">Figure 5: Placement status distribution bar plot showing proportion of placed vs unplaced candidates.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 6: NUMERIC FEATURE DISTRIBUTIONS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">6</span>
+            Task 6: Numeric Feature Distributions
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Histograms with Kernel Density Estimation (KDE) and mean/median indicators for core assessment scores and academic performance metrics.
+    </p>
+
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Feature Name</th>
+                    <th>Mean</th>
+                    <th>Median</th>
+                    <th>Std Dev</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Skewness</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in summary.task6.stats %}
+                <tr>
+                    <td><strong>{{ s.feature }}</strong></td>
+                    <td>{{ s.mean }}</td>
+                    <td><strong>{{ s.median }}</strong></td>
+                    <td>{{ s.std }}</td>
+                    <td>{{ s.min }}</td>
+                    <td>{{ s.max }}</td>
+                    <td>
+                        {% if s.skew > 0.5 %}
+                        <span style="color: #b45309;">+{{ s.skew }} (Right Skew)</span>
+                        {% elif s.skew < -0.5 %}
+                        <span style="color: #b45309;">{{ s.skew }} (Left Skew)</span>
+                        {% else %}
+                        <span style="color: #16a34a;">{{ s.skew }} (Symmetric)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task6.chart) }}" alt="Task 6: Numeric Distributions">
+        <p class="eda-chart-caption">Figure 6: Multi-panel distribution histograms with KDE curves for key student assessment features.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 7: OUTLIER DETECTION (BOXPLOTS)
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">7</span>
+            Task 7: Outlier Detection via Boxplots & IQR
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Outlier identification using Interquartile Range (IQR = Q3 - Q1) with lower boundary (Q1 - 1.5*IQR) and upper boundary (Q3 + 1.5*IQR).
+    </p>
+
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Q1 (25%)</th>
+                    <th>Q3 (75%)</th>
+                    <th>IQR</th>
+                    <th>Lower Fence</th>
+                    <th>Upper Fence</th>
+                    <th>Outlier Count</th>
+                    <th>Outlier %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in summary.task7.table %}
+                <tr>
+                    <td><strong>{{ o.feature }}</strong></td>
+                    <td>{{ o.q1 }}</td>
+                    <td>{{ o.q3 }}</td>
+                    <td>{{ o.iqr }}</td>
+                    <td>{{ o.lower_bound }}</td>
+                    <td>{{ o.upper_bound }}</td>
+                    <td>
+                        {% if o.outlier_count > 0 %}
+                        <span style="color: #e05638; font-weight: bold;">{{ "{:,}".format(o.outlier_count) }}</span>
+                        {% else %}
+                        <span style="color: #16a34a;">0</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ o.outlier_percent }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task7.chart) }}" alt="Task 7: Outlier Boxplots">
+        <p class="eda-chart-caption">Figure 7: Boxplots showing distribution quartiles and extreme data points across key numeric metrics.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 8: CORRELATION ANALYSIS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">8</span>
+            Task 8: Correlation Analysis (Full Heatmap & Target Association)
+        </h3>
+        <span class="badge badge-bi">Bi-variate & Multi-variate</span>
+    </div>
+    <p class="card-intro">
+        Pearson correlation coefficients showing relationships between numeric predictors and the target variable <code>PlacementStatus</code>.
+    </p>
+
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Predictor Feature</th>
+                    <th>Correlation with PlacementStatus</th>
+                    <th>Relationship Strength</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in summary.task8.correlations %}
+                <tr>
+                    <td><strong>#{{ loop.index }}</strong></td>
+                    <td><strong>{{ c.feature }}</strong></td>
+                    <td><span style="font-weight: bold; color: #1f3a5f;">{{ c.correlation }}</span></td>
+                    <td>
+                        {% if "Strong" in c.strength %}
+                        <span style="background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 600;">{{ c.strength }}</span>
+                        {% else %}
+                        <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 600;">{{ c.strength }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task8.chart) }}" alt="Task 8: Correlation Heatmap">
+        <p class="eda-chart-caption">Figure 8: Ranked target correlation bar chart and multi-feature correlation heatmap matrix.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 9: RELATIONSHIP PLOTS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">9</span>
+            Task 9: Relationship Plots (Regression Scatter Plots)
+        </h3>
+        <span class="badge badge-bi">Bi-variate</span>
+    </div>
+    <p class="card-intro">
+        Bivariate regression scatter plots with fitted linear trendlines to assess feature interactions:
+        (1) CGPA vs Salary Package (r = <strong>{{ summary.task9.cgpa_salary_corr }}</strong>),
+        (2) Aptitude Test Score vs Coding Test Score (r = <strong>{{ summary.task9.apt_code_corr }}</strong>).
+    </p>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task9.chart) }}" alt="Task 9: Relationship Plots">
+        <p class="eda-chart-caption">Figure 9: Bivariate scatter plots with OLS regression lines demonstrating linear relationships.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 10: CATEGORICAL FEATURE COUNTS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">10</span>
+            Task 10: Categorical Feature Counts
+        </h3>
+        <span class="badge badge-uni">Uni-variate</span>
+    </div>
+    <p class="card-intro">
+        Frequency counts and category distributions across all 8 categorical dimensions: Gender, City, CollegeTier, Stream, Specialisation, Hostel, HistoryOfBacklogs, and CGPA_Tier.
+    </p>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task10.chart) }}" alt="Task 10: Categorical Feature Counts">
+        <p class="eda-chart-caption">Figure 10: Frequency bar charts across all categorical demographic and academic features.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 11: GENDER VS PLACEMENT STATUS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">11</span>
+            Task 11: Gender vs Placement Status Breakdown
+        </h3>
+        <span class="badge badge-bi">Bi-variate</span>
+    </div>
+    <p class="card-intro">
+        Cross-tabulation analysis of placement outcomes broken down by candidate gender.
+    </p>
+
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Gender</th>
+                    <th>Placed (1)</th>
+                    <th>Not Placed (0)</th>
+                    <th>Total Candidates</th>
+                    <th>Placement Rate (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in summary.task11.table %}
+                <tr>
+                    <td><strong>{{ g.gender }}</strong></td>
+                    <td><span style="color: #2a9d8f; font-weight: bold;">{{ "{:,}".format(g.placed) }}</span></td>
+                    <td><span style="color: #e05638; font-weight: bold;">{{ "{:,}".format(g.not_placed) }}</span></td>
+                    <td>{{ "{:,}".format(g.total) }}</td>
+                    <td><span style="font-weight: bold; color: #1f3a5f;">{{ g.placement_rate }}%</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task11.chart) }}" alt="Task 11: Gender vs Placement Status">
+        <p class="eda-chart-caption">Figure 11: Grouped bar chart and comparative placement percentage by gender.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 12: COLLEGE TIER / STREAM VS PLACEMENT STATUS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">12</span>
+            Task 12: College Tier & Academic Stream vs Placement Status
+        </h3>
+        <span class="badge badge-bi">Bi-variate</span>
+    </div>
+    <p class="card-intro">
+        Comparative evaluation of placement outcomes across institutional tiers (Tier 1, 2, 3) and academic streams (CS, IT, ECE, EE, Mechanical).
+    </p>
+
+    <div class="info-grid" style="margin-bottom: 15px;">
+        <div class="dashboard-card" style="padding: 15px; margin: 0; box-shadow: none; border: 1px solid #e2e8f0;">
+            <h4 style="margin-top: 0;">College Tier Placement Rates</h4>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Tier</th><th>Total</th><th>Placed</th><th>Placement %</th></tr>
+                </thead>
+                <tbody>
+                    {% for t in summary.task12.tier_table %}
+                    <tr>
+                        <td><strong>{{ t.tier }}</strong></td>
+                        <td>{{ "{:,}".format(t.total) }}</td>
+                        <td>{{ "{:,}".format(t.placed) }}</td>
+                        <td><strong>{{ t.placement_rate }}%</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="dashboard-card" style="padding: 15px; margin: 0; box-shadow: none; border: 1px solid #e2e8f0; grid-column: span 2;">
+            <h4 style="margin-top: 0;">Stream Placement Rates</h4>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Stream</th><th>Total</th><th>Placed</th><th>Placement %</th></tr>
+                </thead>
+                <tbody>
+                    {% for s in summary.task12.stream_table %}
+                    <tr>
+                        <td><strong>{{ s.stream }}</strong></td>
+                        <td>{{ "{:,}".format(s.total) }}</td>
+                        <td>{{ "{:,}".format(s.placed) }}</td>
+                        <td><strong>{{ s.placement_rate }}%</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task12.chart) }}" alt="Task 12: Tier and Stream vs Placement Status">
+        <p class="eda-chart-caption">Figure 12: Percentage placement outcomes categorized by college tier and academic engineering branch.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 13: SGPA TREND ACROSS SEMESTERS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">13</span>
+            Task 13: SGPA Trend Across Semesters (Sem1 – Sem8)
+        </h3>
+        <span class="badge badge-multi">Multi-variate</span>
+    </div>
+    <p class="card-intro">
+        Semester-by-semester average SGPA trajectory comparing students who secured placement versus those who remained unplaced.
+    </p>
+
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Semester</th>
+                    <th>Placed Students Average SGPA</th>
+                    <th>Not Placed Students Average SGPA</th>
+                    <th>Overall Dataset SGPA</th>
+                    <th>Difference (Gap)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in summary.task13.trend_table %}
+                <tr>
+                    <td><strong>{{ r.semester }}</strong></td>
+                    <td><span style="color: #2a9d8f; font-weight: bold;">{{ r.placed_avg }}</span></td>
+                    <td><span style="color: #e05638; font-weight: bold;">{{ r.not_placed_avg }}</span></td>
+                    <td>{{ r.overall_avg }}</td>
+                    <td><span style="background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">+{{ "%.2f"|format(r.placed_avg - r.not_placed_avg) }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task13.chart) }}" alt="Task 13: SGPA Trend Across Semesters">
+        <p class="eda-chart-caption">Figure 13: Multi-semester progression curve showing consistent GPA advantage of placed candidates.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 14: SALARY PACKAGE ANALYSIS
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">14</span>
+            Task 14: Salary Package Analysis & College Tier Distribution
+        </h3>
+        <span class="badge badge-bi">Uni-variate & Bi-variate</span>
+    </div>
+    <p class="card-intro">
+        Distribution of compensation packages offered to placed students (LPA) and comparative salary boxplots across college tiers.
+    </p>
+
+    <div class="info-grid" style="margin-bottom: 15px;">
+        <div class="info-box">
+            <h4>Median Placed Salary</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #1f3a5f;">{{ summary.task14.placed_median }} LPA</p>
+        </div>
+        <div class="info-box">
+            <h4>Mean Placed Salary</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #1f3a5f;">{{ summary.task14.placed_mean }} LPA</p>
+        </div>
+        <div class="info-box">
+            <h4>Salary Range</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #1f3a5f;">{{ summary.task14.placed_min }} - {{ summary.task14.placed_max }} LPA</p>
+        </div>
+    </div>
+
+    <h4>Salary Statistics by College Tier</h4>
+    <div class="table-wrapper" style="margin-bottom: 15px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>College Tier</th>
+                    <th>Median Salary (LPA)</th>
+                    <th>Mean Salary (LPA)</th>
+                    <th>Minimum Salary</th>
+                    <th>Maximum Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in summary.task14.tier_salaries %}
+                <tr>
+                    <td><strong>{{ t.tier }}</strong></td>
+                    <td><strong>{{ t.median }} LPA</strong></td>
+                    <td>{{ t.mean }} LPA</td>
+                    <td>{{ t.min }} LPA</td>
+                    <td>{{ t.max }} LPA</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task14.chart) }}" alt="Task 14: Salary Package Analysis">
+        <p class="eda-chart-caption">Figure 14: Salary package histogram with KDE and comparative compensation boxplot by college tier.</p>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     TASK 15: PAIRPLOT
+     ========================================================= -->
+<section class="dashboard-card">
+    <div class="task-header">
+        <h3 class="task-title">
+            <span class="task-number">15</span>
+            Task 15: Pairplot of Core Assessment Scores
+        </h3>
+        <span class="badge badge-multi">Multi-variate</span>
+    </div>
+    <p class="card-intro">
+        Pairwise multi-dimensional feature scatter plots and marginal KDE distributions for CGPA, Aptitude Test Score, Coding Test Score, and Mock Interview Score, color-coded by PlacementStatus.
+    </p>
+
+    <div class="eda-chart-container">
+        <img src="{{ url_for('static', filename='charts/' + summary.task15.chart) }}" alt="Task 15: Pairplot">
+        <p class="eda-chart-caption">Figure 15: Pairplot matrix displaying bivariate relationships and density separations between placed (teal) and unplaced (coral) students.</p>
+    </div>
+</section>
+
+{% endif %}
+
+{% endblock %}
