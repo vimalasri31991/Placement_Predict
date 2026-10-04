@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Regularisation - PlacementPredict</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            PlacementPredict
+        </div>
+
+        <nav>
+
+            <a href="{{ url_for('index') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('eda') }}">
+                EDA
+            </a>
+
+            <a href="{{ url_for('preprocessing') }}">
+                Preprocessing
+            </a>
+
+            <a href="{{ url_for('models') }}" class="active">
+                ML Models
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Regularisation</h1>
+
+        </header>
+
+
+        <section class="content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+
+                <h2>Regularisation</h2>
+
+                <p>
+                    Regularisation is used to reduce overfitting
+                    by adding a penalty to the model coefficients.
+                </p>
+
+            </div>
+
+
+            <!-- INTRODUCTION -->
+            <div class="card">
+
+                <h3>What is Regularisation?</h3>
+
+                <p>
+                    Regularisation is a technique used in machine
+                    learning to control model complexity and improve
+                    generalisation on unseen data.
+                </p>
+
+                <p>
+                    In this project, Logistic Regression is combined
+                    with three regularisation techniques:
+                    Ridge, Lasso and Elastic Net.
+                </p>
+
+            </div>
+
+
+            <!-- RIDGE -->
+            <div class="card">
+
+                <h3>Ridge Regularisation - L2</h3>
+
+                <p>
+                    Ridge regularisation adds an L2 penalty to the
+                    logistic regression objective function.
+                </p>
+
+                <p>
+                    It reduces the magnitude of model coefficients
+                    and helps prevent overfitting.
+                </p>
+
+            </div>
+
+
+            <!-- LASSO -->
+            <div class="card">
+
+                <h3>Lasso Regularisation - L1</h3>
+
+                <p>
+                    Lasso regularisation adds an L1 penalty to the
+                    objective function.
+                </p>
+
+                <p>
+                    L1 regularisation can reduce some coefficients
+                    to zero, which can help with feature selection.
+                </p>
+
+            </div>
+
+
+            <!-- ELASTIC NET -->
+            <div class="card">
+
+                <h3>Elastic Net</h3>
+
+                <p>
+                    Elastic Net combines both L1 and L2 penalties.
+                </p>
+
+                <p>
+                    It provides a balance between feature selection
+                    and coefficient shrinkage.
+                </p>
+
+            </div>
+
+
+            <!-- RESULTS -->
+            <div class="card">
+
+                <h3>Model Comparison</h3>
+
+                <div class="results-grid">
+
+                    <!-- RIDGE -->
+                    <div class="result-card">
+
+                        <h3>Ridge (L2)</h3>
+
+                        <p>
+                            Accuracy
+                        </p>
+
+                        <div class="result-value">
+                            {{ "%.2f"|format(
+                                results["Ridge (L2)"]["accuracy"] * 100
+                            ) }}%
+                        </div>
+
+                        <p>
+                            Precision:
+                            {{ "%.4f"|format(
+                                results["Ridge (L2)"]["precision"]
+                            ) }}
+                        </p>
+
+                        <p>
+                            Recall:
+                            {{ "%.4f"|format(
+                                results["Ridge (L2)"]["recall"]
+                            ) }}
+                        </p>
+
+                        <p>
+                            F1 Score:
+                            {{ "%.4f"|format(
+                                results["Ridge (L2)"]["f1"]
+                            ) }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- LASSO -->
+                    <div class="result-card">
+
+                        <h3>Lasso (L1)</h3>
+
+                        <p>
+                            Accuracy
+                        </p>
+
+                        <div class="result-value">
+                            {{ "%.2f"|format(
+                                results["Lasso (L1)"]["accuracy"] * 100
+                            ) }}%
+                        </div>
+
+                        <p>
+                            Precision:
+                            {{ "%.4f"|format(
+                                results["Lasso (L1)"]["precision"]
+                            ) }}
+                        </p>
+
+                        <p>
+                            Recall:
+                            {{ "%.4f"|format(
+                                results["Lasso (L1)"]["recall"]
+                            ) }}
+                        </p>
+
+                        <p>
+                            F1 Score:
+                            {{ "%.4f"|format(
+                                results["Lasso (L1)"]["f1"]
+                            ) }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- ELASTIC NET -->
+                    <div class="result-card">
+
+                        <h3>Elastic Net</h3>
+
+                        <p>
+                            Accuracy
+                        </p>
+
+                        <div class="result-value">
+                            {{ "%.2f"|format(
+                                results["Elastic Net"]["accuracy"] * 100
+                            ) }}%
+                        </div>
+
+                        <p>
+                            Precision:
+                            {{ "%.4f"|format(
+                                results["Elastic Net"]["precision"]
+                            ) }}
+                        </p>
+
+                        <p>
+                            Recall:
+                            {{ "%.4f"|format(
+                                results["Elastic Net"]["recall"]
+                            ) }}
+                        </p>
+
+                        <p>
+                            F1 Score:
+                            {{ "%.4f"|format(
+                                results["Elastic Net"]["f1"]
+                            ) }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPARISON TABLE -->
+            <div class="card">
+
+                <h3>Regularisation Comparison</h3>
+
+                <table class="data-table">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Method</th>
+
+                        <th>Penalty</th>
+
+                        <th>Accuracy</th>
+
+                        <th>Precision</th>
+
+                        <th>Recall</th>
+
+                        <th>F1 Score</th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    <tr>
+
+                        <td>
+                            Ridge
+                        </td>
+
+                        <td>
+                            L2
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(
+                                results["Ridge (L2)"]["accuracy"] * 100
+                            ) }}%
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Ridge (L2)"]["precision"]
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Ridge (L2)"]["recall"]
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Ridge (L2)"]["f1"]
+                            ) }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Lasso
+                        </td>
+
+                        <td>
+                            L1
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(
+                                results["Lasso (L1)"]["accuracy"] * 100
+                            ) }}%
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Lasso (L1)"]["precision"]
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Lasso (L1)"]["recall"]
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Lasso (L1)"]["f1"]
+                            ) }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Elastic Net
+                        </td>
+
+                        <td>
+                            L1 + L2
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(
+                                results["Elastic Net"]["accuracy"] * 100
+                            ) }}%
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Elastic Net"]["precision"]
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Elastic Net"]["recall"]
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ "%.4f"|format(
+                                results["Elastic Net"]["f1"]
+                            ) }}
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- CONCLUSION -->
+            <div class="card">
+
+                <h3>Conclusion</h3>
+
+                <p>
+                    Regularisation helps control the complexity of
+                    Logistic Regression and reduces the risk of
+                    overfitting.
+                </p>
+
+                <p>
+                    Ridge, Lasso and Elastic Net are compared using
+                    accuracy, precision, recall and F1 score to
+                    determine their performance on the placement
+                    prediction dataset.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Linear Regression - PlacementPredict</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            PlacementPredict
+        </div>
+
+        <nav>
+
+            <a href="{{ url_for('index') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('eda') }}">
+                EDA
+            </a>
+
+            <a href="{{ url_for('preprocessing') }}">
+                Preprocessing
+            </a>
+
+            <a href="{{ url_for('models') }}" class="active">
+                ML Models
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <h1>Linear Regression</h1>
+        </header>
+
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <h2>Linear Regression</h2>
+
+                <p>
+                    Linear Regression is used as a baseline model
+                    for predicting placement status.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Algorithm</h3>
+
+                <p>
+                    Linear Regression models the relationship between
+                    input features and the target variable using a
+                    linear equation.
+                </p>
+
+                <p>
+                    Since PlacementStatus is binary, the continuous
+                    prediction is converted into classes using a
+                    threshold of 0.5.
+                </p>
+
+            </div>
+
+
+            <div class="results-grid">
+
+                <div class="result-card">
+
+                    <h3>MAE</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["MAE"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>RMSE</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["RMSE"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>R² Score</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["R2 Score"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Accuracy</h3>
+
+                    <div class="result-value">
+                        {{ "%.2f"|format(results["Accuracy"] * 100) }}%
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Evaluation</h3>
+
+                <p>
+                    Mean Absolute Error measures the average absolute
+                    difference between actual and predicted values.
+                </p>
+
+                <p>
+                    Root Mean Squared Error gives more importance to
+                    larger prediction errors.
+                </p>
+
+                <p>
+                    R² Score measures how well the model explains the
+                    variation in the target variable.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
