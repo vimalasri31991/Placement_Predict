@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Decision Tree - PlacementPredict</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            PlacementPredict
+        </div>
+
+        <nav>
+
+            <a href="{{ url_for('index') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('eda') }}">
+                EDA
+            </a>
+
+            <a href="{{ url_for('preprocessing') }}">
+                Preprocessing
+            </a>
+
+            <a href="{{ url_for('models') }}" class="active">
+                ML Models
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Decision Tree</h1>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <h2>Decision Tree Classifier</h2>
+
+                <p>
+                    A Decision Tree makes predictions using a sequence
+                    of feature-based decision rules.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Algorithm</h3>
+
+                <p>
+                    The tree recursively divides the dataset into
+                    smaller groups based on feature values.
+                </p>
+
+                <p>
+                    A maximum depth of 10 is used to control the
+                    complexity of the tree.
+                </p>
+
+            </div>
+
+
+            <div class="results-grid">
+
+                <div class="result-card">
+
+                    <h3>Accuracy</h3>
+
+                    <div class="result-value">
+                        {{ "%.2f"|format(results["accuracy"] * 100) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Precision</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["precision"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Recall</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["recall"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>F1 Score</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["f1"]) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Confusion Matrix</h3>
+
+                <table class="data-table">
+
+                    <tr>
+                        <th></th>
+                        <th>Predicted 0</th>
+                        <th>Predicted 1</th>
+                    </tr>
+
+                    <tr>
+                        <th>Actual 0</th>
+                        <td>{{ results["confusion_matrix"][0][0] }}</td>
+                        <td>{{ results["confusion_matrix"][0][1] }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Actual 1</th>
+                        <td>{{ results["confusion_matrix"][1][0] }}</td>
+                        <td>{{ results["confusion_matrix"][1][1] }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

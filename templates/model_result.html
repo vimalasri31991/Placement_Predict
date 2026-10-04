@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ model_name }} | Placement Prediction
+{% endblock %}
+
+
+{% block content %}
+
+<h2>
+    {{ model_name }}
+</h2>
+
+<p class="intro">
+
+    Model training and evaluation results for
+    the Placement Prediction dataset.
+
+</p>
+
+
+{% if error %}
+
+<div class="error">
+
+    <strong>
+        Model Error:
+    </strong>
+
+    {{ error }}
+
+</div>
+
+{% endif %}
+
+
+{% if results %}
+
+
+{% if results.accuracy is defined %}
+
+<section class="dashboard-card">
+
+    <h3>
+        Model Performance
+    </h3>
+
+
+    <div class="info-grid">
+
+        <div class="info-box">
+
+            <h4>
+                Accuracy
+            </h4>
+
+            <p>
+                {{ "%.2f"|format(results.accuracy * 100) }}%
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                Precision
+            </h4>
+
+            <p>
+                {{ "%.4f"|format(results.precision) }}
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                Recall
+            </h4>
+
+            <p>
+                {{ "%.4f"|format(results.recall) }}
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                F1 Score
+            </h4>
+
+            <p>
+                {{ "%.4f"|format(results.f1) }}
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+{% if results.mse is defined %}
+
+<section class="dashboard-card">
+
+    <h3>
+        Regression Metrics
+    </h3>
+
+
+    <div class="info-grid">
+
+        <div class="info-box">
+
+            <h4>
+                Mean Squared Error
+            </h4>
+
+            <p>
+                {{ "%.6f"|format(results.mse) }}
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h4>
+                R² Score
+            </h4>
+
+            <p>
+                {{ "%.6f"|format(results.r2) }}
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+{% if results.variants is defined %}
+
+<section class="dashboard-card">
+
+    <h3>
+        Regularisation Results
+    </h3>
+
+
+    {% for name, result in results.variants.items() %}
+
+    <div class="dashboard-card">
+
+        <h3>
+            {{ name }}
+        </h3>
+
+
+        <div class="info-grid">
+
+            <div class="info-box">
+
+                <h4>
+                    Accuracy
+                </h4>
+
+                <p>
+                    {{ "%.2f"|format(result.accuracy * 100) }}%
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h4>
+                    Precision
+                </h4>
+
+                <p>
+                    {{ "%.4f"|format(result.precision) }}
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h4>
+                    Recall
+                </h4>
+
+                <p>
+                    {{ "%.4f"|format(result.recall) }}
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h4>
+                    F1 Score
+                </h4>
+
+                <p>
+                    {{ "%.4f"|format(result.f1) }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <h4>
+            Confusion Matrix
+        </h4>
+
+
+        <table class="data-table">
+
+            <tr>
+
+                <th>
+                </th>
+
+                <th>
+                    Predicted 0
+                </th>
+
+                <th>
+                    Predicted 1
+                </th>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Actual 0
+                </th>
+
+                <td>
+                    {{ result.confusion_matrix[0][0] }}
+                </td>
+
+                <td>
+                    {{ result.confusion_matrix[0][1] }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Actual 1
+                </th>
+
+                <td>
+                    {{ result.confusion_matrix[1][0] }}
+                </td>
+
+                <td>
+                    {{ result.confusion_matrix[1][1] }}
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    {% endfor %}
+
+</section>
+
+{% endif %}
+
+
+{% if results.confusion_matrix is defined %}
+
+<section class="dashboard-card">
+
+    <h3>
+        Confusion Matrix
+    </h3>
+
+
+    <table class="data-table">
+
+        <tr>
+
+            <th>
+            </th>
+
+            <th>
+                Predicted 0
+            </th>
+
+            <th>
+                Predicted 1
+            </th>
+
+        </tr>
+
+
+        <tr>
+
+            <th>
+                Actual 0
+            </th>
+
+            <td>
+                {{ results.confusion_matrix[0][0] }}
+            </td>
+
+            <td>
+                {{ results.confusion_matrix[0][1] }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <th>
+                Actual 1
+            </th>
+
+            <td>
+                {{ results.confusion_matrix[1][0] }}
+            </td>
+
+            <td>
+                {{ results.confusion_matrix[1][1] }}
+            </td>
+
+        </tr>
+
+    </table>
+
+</section>
+
+{% endif %}
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Model Details
+    </h3>
+
+
+    {% for key, value in results.items() %}
+
+        {% if key not in [
+            "accuracy",
+            "precision",
+            "recall",
+            "f1",
+            "confusion_matrix",
+            "variants",
+            "model"
+        ] %}
+
+        <p>
+
+            <strong>
+                {{ key.replace("_", " ").title() }}:
+            </strong>
+
+            {{ value }}
+
+        </p>
+
+        {% endif %}
+
+    {% endfor %}
+
+</section>
+
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Cost Complexity - PlacementPredict</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            PlacementPredict
+        </div>
+
+        <nav>
+
+            <a href="{{ url_for('index') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('eda') }}">
+                EDA
+            </a>
+
+            <a href="{{ url_for('preprocessing') }}">
+                Preprocessing
+            </a>
+
+            <a href="{{ url_for('models') }}" class="active">
+                ML Models
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Cost-Complexity Pruning</h1>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <h2>Cost-Complexity Pruning</h2>
+
+                <p>
+                    Cost-complexity pruning reduces the complexity
+                    of a Decision Tree to help prevent overfitting.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Algorithm</h3>
+
+                <p>
+                    The pruning parameter ccp_alpha controls the
+                    trade-off between tree complexity and prediction
+                    accuracy.
+                </p>
+
+                <p>
+                    The best alpha is selected using a validation
+                    dataset while keeping the final test set untouched.
+                </p>
+
+            </div>
+
+
+            <div class="results-grid">
+
+                <div class="result-card">
+
+                    <h3>Accuracy</h3>
+
+                    <div class="result-value">
+                        {{ "%.2f"|format(results["accuracy"] * 100) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Best Alpha</h3>
+
+                    <div class="result-value small">
+                        {{ "%.8f"|format(results["ccp_alpha"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Tree Depth</h3>
+
+                    <div class="result-value">
+                        {{ results["tree_depth"] }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Leaf Nodes</h3>
+
+                    <div class="result-value">
+                        {{ results["leaf_nodes"] }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Classification Metrics</h3>
+
+                <p>
+                    Precision:
+                    {{ "%.4f"|format(results["precision"]) }}
+                </p>
+
+                <p>
+                    Recall:
+                    {{ "%.4f"|format(results["recall"]) }}
+                </p>
+
+                <p>
+                    F1 Score:
+                    {{ "%.4f"|format(results["f1"]) }}
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Confusion Matrix</h3>
+
+                <table class="data-table">
+
+                    <tr>
+                        <th></th>
+                        <th>Predicted 0</th>
+                        <th>Predicted 1</th>
+                    </tr>
+
+                    <tr>
+                        <th>Actual 0</th>
+                        <td>{{ results["confusion_matrix"][0][0] }}</td>
+                        <td>{{ results["confusion_matrix"][0][1] }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Actual 1</th>
+                        <td>{{ results["confusion_matrix"][1][0] }}</td>
+                        <td>{{ results["confusion_matrix"][1][1] }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Random Forest - PlacementPredict</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            PlacementPredict
+        </div>
+
+        <nav>
+
+            <a href="{{ url_for('index') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('eda') }}">
+                EDA
+            </a>
+
+            <a href="{{ url_for('preprocessing') }}">
+                Preprocessing
+            </a>
+
+            <a href="{{ url_for('models') }}" class="active">
+                ML Models
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Random Forest</h1>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <h2>Random Forest Classifier</h2>
+
+                <p>
+                    Random Forest combines multiple Decision Trees
+                    to improve prediction performance.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Algorithm</h3>
+
+                <p>
+                    Multiple Decision Trees are trained using random
+                    samples and feature subsets.
+                </p>
+
+                <p>
+                    The final prediction is obtained by combining
+                    the predictions of individual trees.
+                </p>
+
+            </div>
+
+
+            <div class="results-grid">
+
+                <div class="result-card">
+
+                    <h3>Accuracy</h3>
+
+                    <div class="result-value">
+                        {{ "%.2f"|format(results["accuracy"] * 100) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Precision</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["precision"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>Recall</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["recall"]) }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-card">
+
+                    <h3>OOB Score</h3>
+
+                    <div class="result-value">
+                        {{ "%.4f"|format(results["oob_score"]) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>F1 Score</h3>
+
+                <div class="result-value">
+                    {{ "%.4f"|format(results["f1"]) }}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Confusion Matrix</h3>
+
+                <table class="data-table">
+
+                    <tr>
+                        <th></th>
+                        <th>Predicted 0</th>
+                        <th>Predicted 1</th>
+                    </tr>
+
+                    <tr>
+                        <th>Actual 0</th>
+                        <td>{{ results["confusion_matrix"][0][0] }}</td>
+                        <td>{{ results["confusion_matrix"][0][1] }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Actual 1</th>
+                        <td>{{ results["confusion_matrix"][1][0] }}</td>
+                        <td>{{ results["confusion_matrix"][1][1] }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

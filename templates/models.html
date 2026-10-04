@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}
+ML Models | Placement Prediction
+{% endblock %}
+
+
+{% block content %}
+
+<h2>
+    Machine Learning Models
+</h2>
+
+<p class="intro">
+
+    Select an algorithm to train and evaluate it
+    on the Placement Prediction dataset.
+
+</p>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Supervised Learning
+    </h3>
+
+
+    <div class="algorithm-grid">
+
+        <a href="{{ url_for('linear_regression') }}"
+           class="algorithm-card">
+
+            <h4>
+                Linear Regression
+            </h4>
+
+            <p>
+                Regression baseline for predicting
+                placement outcome.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('logistic_regression') }}"
+           class="algorithm-card">
+
+            <h4>
+                Logistic Regression
+            </h4>
+
+            <p>
+                Binary classification algorithm.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('regularisation') }}"
+           class="algorithm-card">
+
+            <h4>
+                Regularisation
+            </h4>
+
+            <p>
+                L1, L2 and Elastic Net logistic
+                regression models.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('decision_tree') }}"
+           class="algorithm-card">
+
+            <h4>
+                Decision Tree
+            </h4>
+
+            <p>
+                Tree-based classification model.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('cost_complexity') }}"
+           class="algorithm-card">
+
+            <h4>
+                Cost-Complexity Pruning
+            </h4>
+
+            <p>
+                Pruned Decision Tree using
+                cost-complexity.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('random_forest') }}"
+           class="algorithm-card">
+
+            <h4>
+                Random Forest
+            </h4>
+
+            <p>
+                Ensemble classification algorithm.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('ada_boost') }}"
+           class="algorithm-card">
+
+            <h4>
+                AdaBoost
+            </h4>
+
+            <p>
+                Adaptive boosting using weak learners.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('gradient_boost') }}"
+           class="algorithm-card">
+
+            <h4>
+                Gradient Boosting
+            </h4>
+
+            <p>
+                Sequential boosting classifier.
+            </p>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Unsupervised Learning
+    </h3>
+
+
+    <div class="algorithm-grid">
+
+        <a href="{{ url_for('k_calculation') }}"
+           class="algorithm-card">
+
+            <h4>
+                K Calculation
+            </h4>
+
+            <p>
+                Calculate inertia and silhouette
+                scores for different K values.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('kmeans') }}"
+           class="algorithm-card">
+
+            <h4>
+                K-Means
+            </h4>
+
+            <p>
+                Cluster student records into groups.
+            </p>
+
+        </a>
+
+
+        <a href="{{ url_for('kmeans_performance') }}"
+           class="algorithm-card">
+
+            <h4>
+                K-Means Performance
+            </h4>
+
+            <p>
+                Evaluate the resulting clusters.
+            </p>
+
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}
