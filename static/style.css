@@ -2,6 +2,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
     font-family: "Segoe UI", Arial, sans-serif;
@@ -9,146 +10,1097 @@ body {
     color: #222;
 }
 
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
 .topbar {
+
     background-color: #1f3a5f;
+
     color: white;
+
     padding: 18px 24px;
+
+    height: 60px;
+
 }
+
 
 .topbar h1 {
+
     margin: 0;
+
     font-size: 22px;
+
 }
+
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
 
 .layout {
+
     display: flex;
+
     min-height: calc(100vh - 60px);
+
+    width: 100%;
+
 }
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
 .sidebar {
-    width: 240px;
+
+    flex: 0 0 250px;
+
+    width: 250px;
+
+    min-width: 250px;
+
+    max-width: 250px;
+
     background-color: #26466f;
+
     padding-top: 10px;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
 }
 
-.sidebar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+/* Prevent scrollbar from affecting visual width */
+
+.sidebar::-webkit-scrollbar {
+
+    width: 5px;
+
 }
+
+
+.sidebar::-webkit-scrollbar-thumb {
+
+    background-color: #55769d;
+
+    border-radius: 10px;
+
+}
+
+
+.sidebar-menu {
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+
+    width: 100%;
+
+}
+
+
+/* =========================================================
+   NORMAL MENU ITEMS
+   ========================================================= */
 
 .menu-item {
-    display: block;
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
     color: #e5ecf5;
+
     padding: 14px 20px;
+
     cursor: pointer;
+
     border-left: 4px solid transparent;
+
     text-decoration: none;
+
+    white-space: nowrap;
+
 }
 
-.menu-item:hover:not(.disabled) {
+
+.menu-item:hover {
+
     background-color: #33578a;
+
 }
+
 
 .menu-item.active {
+
     background-color: #3d6aa3;
+
     border-left: 4px solid #ffffff;
+
+    font-weight: bold;
+
+}
+
+
+/* =========================================================
+   MODEL HEADING
+   ========================================================= */
+
+.model-heading {
+
+    margin-top: 20px;
+
+    margin-bottom: 8px;
+
+    padding: 8px 15px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    color: #8fa8c5;
+
+}
+
+
+/* =========================================================
+   DROPDOWN
+   ========================================================= */
+
+.dropdown {
+
+    width: 100%;
+
+    position: relative;
+
+}
+
+
+/* Dropdown button */
+
+.dropdown-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 14px 20px;
+
+    background: transparent;
+
+    border: none;
+
+    border-left: 4px solid transparent;
+
+    color: #e5ecf5;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+}
+
+
+.dropdown-btn:hover {
+
+    background-color: #33578a;
+
+}
+
+
+/* Arrow */
+
+.arrow {
+
+    font-size: 13px;
+
+    transition: transform 0.2s ease;
+
+}
+
+
+/* Rotate arrow when open */
+
+.dropdown.open .arrow {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* =========================================================
+   DROPDOWN MENU
+   ========================================================= */
+
+.dropdown-menu {
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+
+    width: 100%;
+
+    background-color: #203d61;
+
+    display: none;
+
+}
+
+
+/* Show dropdown */
+
+.dropdown.open .dropdown-menu {
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   DROPDOWN ITEMS
+   ========================================================= */
+
+.dropdown-item {
+
+    display: block;
+
+    width: 100%;
+
+    color: #dce6f2;
+
+    text-decoration: none;
+
+    padding: 12px 12px 12px 38px;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+}
+
+
+.dropdown-item:hover {
+
+    background-color: #33578a;
+
+    color: white;
+
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 24px 32px;
+
+    overflow-x: auto;
+
+}
+
+
+/* =========================================================
+   COMMON
+   ========================================================= */
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+.error {
+
+    margin-top: 12px;
+
+    color: #b00020;
+
+    background: #fdecea;
+
+    padding: 10px 14px;
+
+    border-radius: 4px;
+
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.summary-table {
+
+    margin-top: 10px;
+
+    border-collapse: collapse;
+
+}
+
+
+.summary-table td {
+
+    padding: 6px 12px;
+
+    border: 1px solid #ccc;
+
+}
+
+
+.table-wrapper {
+
+    overflow-x: auto;
+
+    margin-top: 10px;
+
+    max-height: 400px;
+
+    overflow-y: auto;
+
+    border: 1px solid #ddd;
+
+}
+
+
+.data-table {
+
+    border-collapse: collapse;
+
+    width: 100%;
+
+    font-size: 13px;
+
+}
+
+
+.data-table th,
+.data-table td {
+
+    border: 1px solid #ddd;
+
+    padding: 6px 10px;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+}
+
+
+.data-table th {
+
+    background-color: #eaeff5;
+
+    position: sticky;
+
+    top: 0;
+
+}
+
+
+/* =========================================================
+   CHARTS
+   ========================================================= */
+
+.chart-grid {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 16px;
+
+    margin-top: 10px;
+
+}
+
+
+.chart-card {
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    border-radius: 4px;
+
+    padding: 8px;
+
+}
+
+
+.chart-card img {
+
+    max-width: 400px;
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.dashboard-card {
+
+    background: white;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+}
+
+
+.dashboard-card h3 {
+
+    margin-top: 0;
+
+    margin-bottom: 12px;
+
+}
+
+
+.intro {
+
+    margin-bottom: 25px;
+
+    color: #64748b;
+
+}
+
+
+/* =========================================================
+   INFO GRID
+   ========================================================= */
+
+.info-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.info-box {
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+}
+
+
+.info-box h4 {
+
+    margin: 0 0 8px;
+
+}
+
+
+.info-box p {
+
+    margin: 0;
+
+    color: #64748b;
+
+}
+
+
+/* =========================================================
+   WORKFLOW
+   ========================================================= */
+
+.workflow {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.workflow-step {
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+}
+
+
+.workflow-step span {
+
+    display: inline-flex;
+
+    width: 30px;
+
+    height: 30px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-weight: bold;
+
+}
+
+
+.workflow-step h4 {
+
+    margin-bottom: 8px;
+
+}
+
+
+.workflow-step p {
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   ALGORITHM CARDS
+   ========================================================= */
+
+.algorithm-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.algorithm-card {
+
+    display: block;
+
+    padding: 20px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    transition: 0.2s;
+
+}
+
+
+.algorithm-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+}
+
+
+.algorithm-card h4 {
+
+    margin-top: 0;
+
+    color: #2563eb;
+
+}
+
+
+.algorithm-card p {
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   TARGET
+   ========================================================= */
+
+.target-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.target-box {
+
+    padding: 20px;
+
+    text-align: center;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+}
+
+
+.target-box h4 {
+
+    font-size: 30px;
+
+    margin: 0 0 5px;
+
+}
+
+
+.target-box p {
+
+    margin: 0;
+
+    color: #64748b;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+
+        flex-basis: 220px;
+
+        width: 220px;
+
+        min-width: 220px;
+
+        max-width: 220px;
+
+    }
+
+
+    .info-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+
+    .workflow {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .sidebar {
+
+        flex-basis: 200px;
+
+        width: 200px;
+
+        min-width: 200px;
+
+        max-width: 200px;
+
+    }
+
+
+    .content {
+
+        padding: 20px;
+
+    }
+
+
+    .algorithm-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+/* =========================================================
+   TASK BADGES & EDA STYLING
+   ========================================================= */
+
+.task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.task-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f3a5f;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #1f3a5f;
+    color: #ffffff;
+    font-size: 13px;
     font-weight: bold;
 }
 
-.menu-item.disabled {
-    color: #8ba0bd;
-    cursor: not-allowed;
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.content {
-    flex: 1;
-    padding: 24px 32px;
+.badge-uni {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
 }
 
-.hidden {
-    display: none !important;
+.badge-bi {
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
 }
 
-#load-data-btn {
-    background-color: #1f3a5f;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+.badge-multi {
+    background-color: #f3e8ff;
+    color: #7e22ce;
+    border: 1px solid #e9d5ff;
 }
 
-#load-data-btn:hover {
-    background-color: #26466f;
+.eda-chart-container {
+    margin-top: 18px;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
 }
 
-#loading-spinner {
+.eda-chart-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.eda-chart-caption {
     margin-top: 10px;
-    color: #555;
+    font-size: 12.5px;
+    color: #64748b;
+    font-weight: 500;
 }
 
-.error {
-    margin-top: 12px;
-    color: #b00020;
-    background: #fdecea;
-    padding: 10px 14px;
-    border-radius: 4px;
+/* =========================================================
+   K-MEANS SELECTOR
+   ========================================================= */
+
+.k-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
-.summary-table {
-    margin-top: 10px;
-    border-collapse: collapse;
-}
-
-.summary-table td {
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-}
-
-.table-wrapper {
-    overflow-x: auto;
-    margin-top: 10px;
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-}
-
-.data-table {
-    border-collapse: collapse;
-    width: 100%;
+.k-btn {
+    padding: 8px 16px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    border-radius: 6px;
+    color: #1f3a5f;
+    font-weight: 600;
     font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
-.data-table th, .data-table td {
-    border: 1px solid #ddd;
-    padding: 6px 10px;
-    text-align: left;
+.k-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.k-btn.active {
+    background: #1f3a5f;
+    color: white;
+    border-color: #1f3a5f;
+    box-shadow: 0 2px 4px rgba(31, 58, 95, 0.3);
+}
+
+.card-intro {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   METHOD SELECTOR BAR (Hierarchical, DBSCAN, Anomaly)
+   ========================================================= */
+
+.method-selector-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.selector-label {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #1f3a5f;
     white-space: nowrap;
 }
 
-.data-table th {
-    background-color: #eaeff5;
-    position: sticky;
-    top: 0;
+/* =========================================================
+   ALERT ERROR BOX
+   ========================================================= */
+
+.alert-error {
+    background: #fff0f0;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 14px 18px;
+    color: #b91c1c;
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
-.chart-grid {
+/* =========================================================
+   CHART ROW (side-by-side charts)
+   ========================================================= */
+
+.chart-row {
     display: flex;
+    gap: 20px;
     flex-wrap: wrap;
-    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.chart-row .chart-card {
+    flex: 1 1 340px;
+    min-width: 300px;
+}
+
+/* =========================================================
+   CHART CAPTION
+   ========================================================= */
+
+.chart-caption {
     margin-top: 10px;
+    font-size: 12.5px;
+    color: #64748b;
+    line-height: 1.5;
 }
 
-.chart-card {
+/* =========================================================
+   CLUSTER DOT (coloured circle in table)
+   ========================================================= */
+
+.cluster-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* =========================================================
+   MINI BAR (placement rate bar in cluster profiles)
+   ========================================================= */
+
+.mini-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mini-bar {
+    height: 10px;
+    border-radius: 5px;
+    min-width: 2px;
+    max-width: 140px;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   PAGE HEADER (title + subtitle block)
+   ========================================================= */
+
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f3a5f;
+    margin: 0 0 6px;
+}
+
+.page-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+}
+
+.card-subtitle {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0;
+}
+
+
+/* =========================================================
+   K NUMBER INPUT FORM
+   ========================================================= */
+
+.k-input-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.k-input-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+}
+
+.k-number-input {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f3a5f;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 8px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.chart-card img {
-    max-width: 400px;
-    display: block;
+.k-number-input:focus {
+    border-color: #1f3a5f;
+    box-shadow: 0 0 0 3px rgba(31, 58, 95, 0.12);
+}
+
+/* remove browser spinner arrows */
+.k-number-input::-webkit-inner-spin-button,
+.k-number-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.k-number-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.k-submit-btn {
+    padding: 8px 20px;
+    background: #1f3a5f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.k-submit-btn:hover {
+    background: #2a4f80;
+    box-shadow: 0 2px 6px rgba(31, 58, 95, 0.3);
 }

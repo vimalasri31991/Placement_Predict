@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}
+Data Loading | Placement Prediction
+{% endblock %}
+
+
+{% block content %}
+
+<h2>
+    Data Loading
+</h2>
+
+<p class="intro">
+    Loading and inspecting the Placement Prediction dataset.
+</p>
+
+
+{% if error %}
+
+<div class="error">
+
+    <strong>
+        Error:
+    </strong>
+
+    {{ error }}
+
+</div>
+
+{% endif %}
+
+
+{% if data %}
+
+<section class="dashboard-card">
+
+    <h3>
+        Dataset Summary
+    </h3>
+
+
+    <table class="summary-table">
+
+        <tr>
+
+            <td>
+                Number of Rows
+            </td>
+
+            <td>
+                {{ data.rows }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Number of Columns
+            </td>
+
+            <td>
+                {{ data.columns }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Total Missing Values
+            </td>
+
+            <td>
+                {{ data.missing_total }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Duplicate Rows
+            </td>
+
+            <td>
+                {{ data.duplicate_rows }}
+            </td>
+
+        </tr>
+
+    </table>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Dataset Columns
+    </h3>
+
+
+    <div class="table-wrapper">
+
+        <table class="data-table">
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Column
+                </th>
+
+                <th>
+                    Data Type
+                </th>
+
+                <th>
+                    Missing
+                </th>
+
+                <th>
+                    Unique Values
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for row in data.summary %}
+
+            <tr>
+
+                <td>
+                    {{ row.column }}
+                </td>
+
+                <td>
+                    {{ row.dtype }}
+                </td>
+
+                <td>
+                    {{ row.missing }}
+                </td>
+
+                <td>
+                    {{ row.unique }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<section class="dashboard-card">
+
+    <h3>
+        Dataset Preview
+    </h3>
+
+
+    <div class="table-wrapper">
+
+        <table class="data-table">
+
+            {% if data.preview %}
+
+            <thead>
+
+            <tr>
+
+                {% for column in data.column_names %}
+
+                <th>
+                    {{ column }}
+                </th>
+
+                {% endfor %}
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for row in data.preview %}
+
+            <tr>
+
+                {% for column in data.column_names %}
+
+                <td>
+                    {{ row[column] }}
+                </td>
+
+                {% endfor %}
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+            {% endif %}
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        Placement Prediction
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <h1>
+        Placement Prediction Project
+    </h1>
+
+</header>
+
+
+<div class="layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <nav class="sidebar">
+
+        <ul class="sidebar-menu">
+
+            <!-- DASHBOARD -->
+
+            <li>
+
+                <a href="{{ url_for('index') }}"
+                   class="menu-item {% if active == 'dashboard' %}active{% endif %}">
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+
+            <!-- DATA LOADING -->
+
+            <li>
+
+                <a href="{{ url_for('data_loading') }}"
+                   class="menu-item {% if active == 'data-loading' %}active{% endif %}">
+
+                    Data Loading
+
+                </a>
+
+            </li>
+
+
+            <!-- EDA -->
+
+            <li>
+
+                <a href="{{ url_for('eda_page') }}"
+                   class="menu-item {% if active == 'eda' %}active{% endif %}">
+
+                    EDA
+
+                </a>
+
+            </li>
+
+
+            <!-- PREPROCESSING -->
+
+            <li>
+
+                <a href="{{ url_for('preprocessing_page') }}"
+                   class="menu-item {% if active == 'preprocessing' %}active{% endif %}">
+
+                    Preprocessing
+
+                </a>
+
+            </li>
+
+
+            <!-- ================= ML MODELS HEADING ================= -->
+
+            <li class="model-heading">
+
+                ML MODELS
+
+            </li>
+
+
+            <!-- ================= REGRESSION DROPDOWN ================= -->
+
+            <li class="dropdown {% if active in ['regression-linear','regression-logistic','regression-regularisation'] %}open{% endif %}">
+
+                <button class="dropdown-btn">
+
+                    <span>
+                        Regression
+                    </span>
+
+                    <span class="arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <a href="{{ url_for('linear_regression') }}"
+                           class="dropdown-item {% if active == 'regression-linear' %}active{% endif %}">
+
+                            Linear Regression
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('logistic_regression') }}"
+                           class="dropdown-item {% if active == 'regression-logistic' %}active{% endif %}">
+
+                            Logistic Regression
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('regularisation') }}"
+                           class="dropdown-item {% if active == 'regression-regularisation' %}active{% endif %}">
+
+                            Regularisation
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+
+            <!-- ================= TREES DROPDOWN ================= -->
+
+            <li class="dropdown {% if active in ['trees-decision','trees-cost','trees-forest','trees-adaboost','trees-gradient','trees-xgboost','models'] %}open{% endif %}">
+
+                <button class="dropdown-btn">
+
+                    <span>
+                        Trees
+                    </span>
+
+                    <span class="arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <a href="{{ url_for('decision_tree') }}"
+                           class="dropdown-item {% if active == 'trees-decision' %}active{% endif %}">
+
+                            Decision Tree
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('cost_complexity') }}"
+                           class="dropdown-item {% if active == 'trees-cost' %}active{% endif %}">
+
+                            Cost-Complexity
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('random_forest') }}"
+                           class="dropdown-item {% if active == 'trees-forest' %}active{% endif %}">
+
+                            Random Forest
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('ada_boost') }}"
+                           class="dropdown-item {% if active == 'trees-adaboost' %}active{% endif %}">
+
+                            AdaBoost
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('gradient_boost') }}"
+                           class="dropdown-item {% if active == 'trees-gradient' %}active{% endif %}">
+
+                            Gradient Boosting
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{{ url_for('xg_boost') }}"
+                           class="dropdown-item {% if active == 'trees-xgboost' %}active{% endif %}">
+
+                            XGBoost
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+
+            <!-- ================= K-MEANS DROPDOWN ================= -->
+
+            <li class="dropdown {% if active in ['kmeans-manual','kmeans-elbow','kmeans-silhouette'] %}open{% endif %}">
+
+                <button class="dropdown-btn">
+
+                    <span>
+                        K-Means Clustering
+                    </span>
+
+                    <span class="arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <a href="{{ url_for('kmeans_manual') }}"
+                           class="dropdown-item {% if active == 'kmeans-manual' %}active{% endif %}">
+
+                            Manual K Selection
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('kmeans_elbow') }}"
+                           class="dropdown-item {% if active == 'kmeans-elbow' %}active{% endif %}">
+
+                            Elbow Method
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('kmeans_silhouette') }}"
+                           class="dropdown-item {% if active == 'kmeans-silhouette' %}active{% endif %}">
+
+                            Silhouette Method
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+
+            <!-- ================= HIERARCHICAL CLUSTERING DROPDOWN ================= -->
+
+            <li class="dropdown {% if active in ['hierarchical-ward','hierarchical-complete','hierarchical-average','hierarchical-single','hierarchical-centroid'] %}open{% endif %}">
+
+                <button class="dropdown-btn">
+
+                    <span>
+                        Hierarchical Clustering
+                    </span>
+
+                    <span class="arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <a href="{{ url_for('hierarchical_ward') }}"
+                           class="dropdown-item {% if active == 'hierarchical-ward' %}active{% endif %}">
+
+                            Ward's Method
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('hierarchical_complete') }}"
+                           class="dropdown-item {% if active == 'hierarchical-complete' %}active{% endif %}">
+
+                            Complete Linkage
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('hierarchical_average') }}"
+                           class="dropdown-item {% if active == 'hierarchical-average' %}active{% endif %}">
+
+                            Average Linkage
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('hierarchical_single') }}"
+                           class="dropdown-item {% if active == 'hierarchical-single' %}active{% endif %}">
+
+                            Single Linkage
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('hierarchical_centroid') }}"
+                           class="dropdown-item {% if active == 'hierarchical-centroid' %}active{% endif %}">
+
+                            Centroid Linkage
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+
+            <!-- ================= DBSCAN DROPDOWN ================= -->
+
+            <li class="dropdown {% if active in ['dbscan-dense','dbscan-medium','dbscan-sparse'] %}open{% endif %}">
+
+                <button class="dropdown-btn">
+
+                    <span>
+                        DBSCAN
+                    </span>
+
+                    <span class="arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <a href="{{ url_for('dbscan_dense') }}"
+                           class="dropdown-item {% if active == 'dbscan-dense' %}active{% endif %}">
+
+                            Dense Clusters
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('dbscan_medium') }}"
+                           class="dropdown-item {% if active == 'dbscan-medium' %}active{% endif %}">
+
+                            Medium Density
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('dbscan_sparse') }}"
+                           class="dropdown-item {% if active == 'dbscan-sparse' %}active{% endif %}">
+
+                            Sparse Clusters
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+
+            <!-- ================= ANOMALY DETECTION DROPDOWN ================= -->
+
+            <li class="dropdown {% if active in ['anomaly-isolation-forest','anomaly-one-class-svm','anomaly-reconstruction'] %}open{% endif %}">
+
+                <button class="dropdown-btn">
+
+                    <span>
+                        Anomaly Detection
+                    </span>
+
+                    <span class="arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <a href="{{ url_for('anomaly_isolation_forest') }}"
+                           class="dropdown-item {% if active == 'anomaly-isolation-forest' %}active{% endif %}">
+
+                            Isolation Forest
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('anomaly_one_class_svm') }}"
+                           class="dropdown-item {% if active == 'anomaly-one-class-svm' %}active{% endif %}">
+
+                            One-Class SVM
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="{{ url_for('anomaly_reconstruction') }}"
+                           class="dropdown-item {% if active == 'anomaly-reconstruction' %}active{% endif %}">
+
+                            PCA Reconstruction
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="content">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+</div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const dropdownButtons =
+        document.querySelectorAll(".dropdown-btn");
+
+    dropdownButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const dropdown =
+                this.parentElement;
+
+            dropdown.classList.toggle("open");
+
+            document
+                .querySelectorAll(".dropdown")
+                .forEach(function (other) {
+
+                    if (other !== dropdown) {
+
+                        other.classList.remove("open");
+
+                    }
+
+                });
+
+        });
+
+    });
+
+    document.addEventListener("click", function (event) {
+
+        if (!event.target.closest(".dropdown")) {
+
+            document
+                .querySelectorAll(".dropdown:not(.open-persistent)")
+                .forEach(function (dropdown) {
+
+                    // keep open if has active child item
+                    if (!dropdown.querySelector(".active")) {
+                        dropdown.classList.remove("open");
+                    }
+
+                });
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>
